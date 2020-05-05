@@ -10,14 +10,11 @@ pool:
   vmImage: 'ubuntu-latest'
 strategy:
   matrix:
-    Python27:
-      python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
     Python37:
       python.version: '3.7'
+
+variables:
+  imageName: 'pipelines-javascript-docker'
 
 steps:
 - task: UsePythonVersion@0
@@ -33,3 +30,11 @@ steps:
 - script: |
     pip install pytest pytest-azurepipelines
   displayName: 'pytest'
+
+- task: Docker@2
+  displayName: Build an image
+  inputs:
+    repository: $(imageName)
+    command: build
+    Dockerfile: Dockerfile
+    
